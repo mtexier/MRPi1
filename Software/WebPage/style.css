@@ -1,0 +1,48 @@
+body 
+{
+background-color: white;
+}
+
+h1
+{
+background-color: white;
+}
+
+.fleche_forward {
+background:url(images/fleche_forward.png);
+border:none;
+width: 193px; 
+height: 144px; 
+cursor: pointer;
+}
+
+.fleche_back {
+background:url(images/fleche_back.png);
+border:none;
+width: 193px; 
+height: 144px; 
+cursor: pointer;
+}
+
+.fleche_left {
+background:url(images/fleche_left.png);
+border:none;
+width: 144px; 
+height: 193px; 
+cursor: pointer;
+}
+
+.fleche_right {
+background:url(images/fleche_right.png);
+border:none;
+width: 144px; 
+height: 193px; 
+cursor: pointer;
+}
+
+.stop_button {
+background:url(images/stop_button.png);
+border:none;
+width: 194px; 
+height: 189px; 
+}
