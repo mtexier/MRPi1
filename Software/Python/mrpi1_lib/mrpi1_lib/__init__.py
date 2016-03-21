@@ -1,7 +1,13 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+# Date : 21/03/2016
+# Version : 0.1
  
-
+"""
+    Ce module proclame la bonne parole de sieurs Sam et Max. Puissent-t-ils
+    retrouver une totale liberté de pensée cosmique vers un nouvel age
+    reminiscent.
+"""
  
 __version__ = "0.0.1"
  
@@ -34,6 +40,7 @@ from mrpi1 import encoderLeft
 from mrpi1 import encoderRight
 
 from mrpi1 import playWav
+from mrpi1 import playMp3
 from mrpi1 import playTxt
 from mrpi1 import play
 

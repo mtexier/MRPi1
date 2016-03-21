@@ -4,10 +4,10 @@
 #  Python API
 #  This library is used for the MRPi1 robot.
 #  http://www.macerobotics.com
-# Date : 20/01/2016
+# Date : 21/03/2016
 # Version : 0.1
 #
-# Licence
+# MIT Licence
 
 ######################################################
 
@@ -41,6 +41,7 @@ __all__ = ['motorLeft']
 __all__ = ['encoderLeft']
 __all__ = ['encoderRight']
 __all__ = ['playWav']
+__all__ = ['playMp3']
 __all__ = ['playTxt']
 __all__ = ['play']
 __all__ = ['writeCommand']
@@ -216,7 +217,6 @@ def forward(speed):
     port.write("#MF,")
     port.write(speed)
     port.write("!")
-    print "move forward"
   else:
     raise ValueError("error speed")
 
@@ -238,11 +238,12 @@ def forwardC(speed, distance):
   
   while True:
     writeCommand("TGS,1")
-    chaine = readData()
-    if(chaine == '3'):
-      print "FIN"
+    state = readData()
+    if((state == '3') or (state == '4')):# state = 3 (end of trapezoid), state = 4 (error trapezoid)
+      if (state == '4'):
+        print "error"
       chaine = 0
-      break
+      break # end while 1
 
 # the robot move back
 def back(speed):
@@ -294,7 +295,6 @@ def turnRight(speed):
   port.write("#TR,")
   port.write(speed)
   port.write("!")
-  print "turn right"
   
 # the robot turn right with control
 def turnRightC(speed, distance):
@@ -320,7 +320,6 @@ def turnLeft(speed):
   port.write("#TL,")
   port.write(speed)
   port.write("!")
-  print "turn left"
   
 # the robot turn left with control
 def turnLeftC(speed, distance):
@@ -349,7 +348,6 @@ def motorRight(direction, speed):
   port.write(",")
   port.write(pwm)
   port.write("!")
-  print "motor right"
 
 # the motor left
 def motorLeft(direction, speed):
@@ -360,13 +358,12 @@ def motorLeft(direction, speed):
   port.write(",")
   port.write(pwm)
   port.write("!")
-  print "motor left"
 
 #---------------------------------------------------------------------
 #-------------[ MRPI1 encoders robot methods]-------------------------
 
 # the encoderleft
-def encoderLeft(self):
+def encoderLeft():
   writeCommand("EDL")
   liste = []
   value = 0
@@ -377,7 +374,7 @@ def encoderLeft(self):
   return __convListToUint(liste)
   
 # the encoderleft
-def encoderRight(self):
+def encoderRight():
   writeCommand("EDR")
   liste = []
   value = 0
@@ -394,6 +391,13 @@ def encoderRight(self):
 def playWav(file_wav):
   writeCommand("SPE")# enable speaker
   cmd = "aplay -D hw:1,0 " + file_wav
+  os.system(cmd)
+  writeCommand("SPD")# disable speaker
+  
+# play mp3 file, exemple : playMp3("Hello.mp3")
+def playMp3(file_mp3):
+  writeCommand("SPE")# enable speaker
+  cmd = "omxplayer " + file_mp3
   os.system(cmd)
   writeCommand("SPD")# disable speaker
 
