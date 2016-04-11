@@ -4,10 +4,10 @@
 #  Python API
 #  This library is used for the MRPi1 robot.
 #  http://www.macerobotics.com
-# Date : 21/03/2016
-# Version : 0.1
+#  Date : 11/04/2016
+#  Version : 0.13
 #
-# MIT Licence
+#  MIT Licence
 
 ######################################################
 
@@ -28,6 +28,8 @@ __all__ = ['groundSensor']
 __all__ = ['ambiantLight']
 __all__ = ['proxSensor']
 __all__ = ['forward']
+__all__ = ['controlEnable']
+__all__ = ['controlDisable']
 __all__ = ['forwardC']
 __all__ = ['back']
 __all__ = ['backC']
@@ -50,38 +52,62 @@ __all__ = ['readData']
 ###############################################################
 ###############################################################
 
+# control robot (postion/orientation enable or disable)
+control_robot = False
 
-# init serial port
+# init serial port, baud rate = 115200
 port = serial.Serial('/dev/ttyAMA0', 115200)
 
 
 # turn led on or off
 def led(led, on_off):
+  """
+        led on or off
+        
+        parameter 1 : led number (1 to 3)
 
-  if led not in(1,2,3):
-    raise ValueError("param can only be 1,2 or 3")
-  if on_off not in (0,1):
-    raise ValueError("param can only be 0 or 1")
-   
-  led_number = str(led)
-  action = str(on_off) # conversion number to string
-  port.write("#LED,")
-  port.write(led_number)
-  port.write(",")
-  port.write(action)
-  port.write("!")
+        parameter 2 : led state (on = 1, off = 0)
+
+        Exemple, led 2 on:
+        >> led(2,1)
+  """
+  if( led not in(1,2,3) ) or (on_off not in (0,1)):
+    print ("error parameter")
+  else:
+    led_number = str(led)
+    action = str(on_off) # conversion number to string
+    port.write("#LED,")
+    port.write(led_number)
+    port.write(",")
+    port.write(action)
+    port.write("!")
 
   
 # toggle led
 def ledToggle(led):
-  if led not in(1,2,3):
-    raise ValueError("param can only be 1,2 or 3") 
-  port.write("#LEDT,")
-  port.write(str(led))
-  port.write("!")
+  """
+        toggle led
+        
+        parameter : led number (1 to 3)
+
+        Exemple:
+        >> ledToggle(2)
+  """
+  if( led not in(1,2,3) ) :
+    print("error : parameter can only be 1, 2 or 3")
+  else:
+    port.write("#LEDT,")
+    port.write(str(led))
+    port.write("!")
 
 # Read firmware version of the microcontroller
 def firmwareVersion():
+  """
+        Read the firmware version (microcontroller)
+
+        Exemple:
+        >> firmwareVersion()
+  """
   liste = []
   value = 0
   port.flushInput() # reset serial receive buffer
@@ -94,6 +120,14 @@ def firmwareVersion():
   
 # Read switch
 def switch():
+  """
+        Read the switch state
+
+        return switch()
+
+        Exemple:
+        >> switch()
+  """
   liste = []
   value = 0
   port.flushInput() # reset serial receive buffer
@@ -146,14 +180,17 @@ def groundSensor(sensor):
         Exemple:
         >> groundSensor(1)
   """
-  liste = []
-  value = 0
-  port.flushInput() # reset serial receive buffer
-  port.write("#GR,")
-  port.write( str(sensor) )
-  port.write("!")
-  value = readData()
-  return __convListToFloat(value) 
+  if( sensor not in(1,2,3) ) :
+    print ("error parameter")
+  else:
+    liste = []
+    value = 0
+    port.flushInput() # reset serial receive buffer
+    port.write("#GR,")
+    port.write( str(sensor) )
+    port.write("!")
+    value = readData()
+    return __convListToFloat(value) 
   
 # read ambiant light sensor
 def ambiantLight(sensor):
@@ -167,14 +204,17 @@ def ambiantLight(sensor):
         Exemple:
         >> ambiantLight(0)
   """
-  liste = []
-  value = 0
-  port.flushInput() # reset serial receive buffer
-  port.write("#AL,")
-  port.write( str(sensor) )
-  port.write("!")
-  value = readData()
-  return __convListToUint(value)
+  if( sensor not in(1,2,3,4,5,6) ) :
+    print ("error parameter")
+  else:
+    liste = []
+    value = 0
+    port.flushInput() # reset serial receive buffer
+    port.write("#AL,")
+    port.write( str(sensor) )
+    port.write("!")
+    value = readData()
+    return __convListToUint(value)
   
   
 # read proximity sensor
@@ -189,14 +229,17 @@ def proxSensor(sensor):
         Exemple:
         >> proxSensor(2)
   """
-  liste = []
-  value = 0
-  port.flushInput() # reset serial receive buffer
-  port.write("#PROX,")
-  port.write( str(sensor) )
-  port.write("!")
-  value = readData()
-  return __convListToUint(value)
+  if( sensor not in(1,2,3,4,5,6) ) :
+    print ("error parameter")
+  else:
+    liste = []
+    value = 0
+    port.flushInput() # reset serial receive buffer
+    port.write("#PROX,")
+    port.write( str(sensor) )
+    port.write("!")
+    value = readData()
+    return __convListToUint(value)
   
 #---------------------------------------------------------------------
 #-------------[ MRPI1 move robot methods]------------
@@ -218,7 +261,31 @@ def forward(speed):
     port.write(speed)
     port.write("!")
   else:
-    raise ValueError("error speed")
+    print("error speed value")
+
+# control robot enable
+def controlEnable():
+  """
+        control robot enable
+
+        Exemple:
+        >> controlEnable()
+  """
+  global control_robot
+  control_robot = True
+  writeCommand("CRE")
+
+# control robot disable  
+def controlDisable():
+  """
+        control robot disable
+
+        Exemple:
+        >> controlDisable()
+  """
+  global control_robot
+  control_robot = False
+  writeCommand("CRD")
 
 # the robot move forward with control
 def forwardC(speed, distance):
@@ -228,22 +295,25 @@ def forwardC(speed, distance):
         Exemple:
         >> forwardC(20, 4000)
   """
-  speed = str(speed)
-  distance = str(distance)
-  port.write("#MFC,")
-  port.write(distance)
-  port.write(",")
-  port.write(speed)
-  port.write("!")
-  
-  while True:
-    writeCommand("TGS,1")
-    state = readData()
-    if((state == '3') or (state == '4')):# state = 3 (end of trapezoid), state = 4 (error trapezoid)
-      if (state == '4'):
-        print "error"
-      chaine = 0
-      break # end while 1
+  if control_robot == True:
+    speed = str(speed)
+    distance = str(distance)
+    port.write("#MFC,")
+    port.write(distance)
+    port.write(",")
+    port.write(speed)
+    port.write("!")
+    
+    while True:
+      writeCommand("TGS,1")
+      state = readData()
+      if((state == '3') or (state == '4')):# state = 3 (end of trapezoid), state = 4 (error trapezoid)
+        if (state == '4'):
+          print "error : speed to hight"
+        chaine = 0
+        break # end while 1
+  else:
+    print "error : control robot disable"
 
 # the robot move back
 def back(speed):
@@ -255,10 +325,13 @@ def back(speed):
         Exemple:
         >> forward(20)
   """
-  speed = str(speed)
-  port.write("#MB,")
-  port.write(speed)
-  port.write("!")
+  if speed > -1 and speed < 101:
+    speed = str(speed)
+    port.write("#MB,")
+    port.write(speed)
+    port.write("!")
+  else:
+    print("error speed value")
   
 # the robot move back with control
 def backC(speed, distance):
@@ -266,7 +339,7 @@ def backC(speed, distance):
         move forward mrpi1 with control
 
         Exemple:
-        >> forwardC(20, 4000)
+        >> backC(20, 4000)
   """
   speed = str(speed)
   distance = str(distance)
@@ -279,25 +352,58 @@ def backC(speed, distance):
   
   while True:
     writeCommand("TGS,1")
-    chaine = readData()
-    if(chaine == '3'):
-      print "FIN"
+    state = readData()
+    if((state == '3') or (state == '4')):# state = 3 (end of trapezoid), state = 4 (error trapezoid)
+      if (state == '4'):
+        print "error : speed to hight"
       chaine = 0
-      break
+      break # end while 1 
 
 # the robot stop
 def stop():
+  """
+        stop the robot
+
+        Exemple:
+        >> stop()
+  """
   writeCommand("STP")
   
 # the robot turn right
 def turnRight(speed):
-  speed = str(speed)
-  port.write("#TR,")
-  port.write(speed)
-  port.write("!")
+  """
+        turn right
+
+        parameter : speed (0 to 100)
+        max speed = 100
+        min speed = 0
+
+        Exemple:
+        >> turnRight(30)
+  """
+  if speed > -1 and speed < 101:
+    speed = str(speed)
+    port.write("#TR,")
+    port.write(speed)
+    port.write("!")
+  else:
+    print("error speed value")
   
 # the robot turn right with control
 def turnRightC(speed, distance):
+  """
+        turn right with control
+
+        parameter 1 : speed (0 to 100)
+        max speed = 100
+        min speed = 0
+
+        parameter 2 : degree angle
+        546 = 90 degree 
+
+        Exemple:
+        >> turnRightC(10, 546)
+  """
   speed = str(speed)
   distance = str(distance)
   port.write("#TRC,")
@@ -307,22 +413,49 @@ def turnRightC(speed, distance):
   port.write("!")
 
   while True:
-    writeCommand("TGS,2")
-    chaine = readData()
-    if(chaine == '3'):
-      print "FIN"
+    writeCommand("TGS,1")
+    state = readData()
+    if((state == '3') or (state == '4')):# state = 3 (end of trapezoid), state = 4 (error trapezoid)
+      if (state == '4'):
+        print "error : speed to hight"
       chaine = 0
-      break
+      break # end while 1 
 
 # the robot turn left
 def turnLeft(speed):
-  speed = str(speed)
-  port.write("#TL,")
-  port.write(speed)
-  port.write("!")
+  """
+        turn left
+
+        parameter : speed (0 to 100)
+        max speed = 100
+        min speed = 0
+
+        Exemple:
+        >> turnLeft(30)
+  """
+  if speed > -1 and speed < 101:
+    speed = str(speed)
+    port.write("#TL,")
+    port.write(speed)
+    port.write("!")
+  else:
+    print("error speed value")
   
 # the robot turn left with control
 def turnLeftC(speed, distance):
+  """
+        turn left with control
+
+        parameter 1 : speed (0 to 100)
+        max speed = 100
+        min speed = 0
+
+        parameter 2 : degree angle
+        546 = 90 degree
+
+        Exemple:
+        >> turnLeftC(10, 546)
+  """
   speed = str(speed)
   distance = str(distance)
   port.write("#TLC,")
@@ -332,15 +465,26 @@ def turnLeftC(speed, distance):
   port.write("!")
   
   while True:
-    writeCommand("TGS,2")
-    chaine = readData()
-    if(chaine == '3'):
-      print "FIN"
+    writeCommand("TGS,1")
+    state = readData()
+    if((state == '3') or (state == '4')):# state = 3 (end of trapezoid), state = 4 (error trapezoid)
+      if (state == '4'):
+        print "error : speed to hight"
       chaine = 0
-      break
+      break # end while 1 
   
 # the motor right
 def motorRight(direction, speed):
+  """
+        motor right control
+
+        parameter 1 : direction (0 or 1)
+
+        parameter 2 : speed ( 0 to 100)     
+
+        Exemple:
+        >> motorRigh(1, 50)
+  """
   dir = str(direction)
   pwm = str(speed)
   port.write("#MOTR,")
@@ -351,6 +495,16 @@ def motorRight(direction, speed):
 
 # the motor left
 def motorLeft(direction, speed):
+  """
+        motor left control
+
+        parameter 1 : direction (0 or 1)
+
+        parameter 2 : speed ( 0 to 100)     
+
+        Exemple:
+        >> motorLeft(1, 50)
+  """
   dir = str(direction)
   pwm = str(speed)
   port.write("#MOTL,")
@@ -364,31 +518,45 @@ def motorLeft(direction, speed):
 
 # the encoderleft
 def encoderLeft():
+  """
+        read the encoder left value  
+
+        Exemple:
+        >> encoderLeft()
+  """
   writeCommand("EDL")
   liste = []
   value = 0
   port.flushInput() # reset serial receive buffer
-  while value != '?':
-    value = port.read()
-    liste.append( value ) # Add an item to the end of the list
-  return __convListToUint(liste)
+  value = readData()
+  return __convListToUint(value)
   
 # the encoderleft
 def encoderRight():
+  """
+        read the encoder right value  
+
+        Exemple:
+        >> encoderRight()
+  """
   writeCommand("EDR")
   liste = []
   value = 0
   port.flushInput() # reset serial receive buffer
-  while value != '?':
-    value = port.read()
-    liste.append( value ) # Add an item to the end of the list
-  return __convListToUint(liste)
+  value = readData()
+  return __convListToUint(value)
   
 #---------------------------------------------------------------------
 #-------------[ MRPI1 audio robot methods]----------------------------
 
 # play wav file, exemple : playWav("Hello.wav")
 def playWav(file_wav):
+  """
+        play wav audio file 
+
+        Exemple:
+        >> playWav("hello.wav")
+  """
   writeCommand("SPE")# enable speaker
   cmd = "aplay -D hw:1,0 " + file_wav
   os.system(cmd)
@@ -396,13 +564,25 @@ def playWav(file_wav):
   
 # play mp3 file, exemple : playMp3("Hello.mp3")
 def playMp3(file_mp3):
+  """
+        play mp3 audio file 
+
+        Exemple:
+        >> playMp3("hello.wav")
+  """
   writeCommand("SPE")# enable speaker
-  cmd = "omxplayer " + file_mp3
+  cmd = "omxplayer " + file_mp3 
   os.system(cmd)
   writeCommand("SPD")# disable speaker
 
 # play  text file, exemple : playFileTxt("Hello.txt")
 def playTxt(file_txt):
+  """
+        play text file 
+
+        Exemple:
+        >> playTxt("hello.txt")
+  """
   cmd = "text2wave " + file_txt
   cmd = cmd + " -o file.wav"
   os.system(cmd)
@@ -411,6 +591,12 @@ def playTxt(file_txt):
 
 # play  text, exemple : playFileTxt("Hello MRPi1")
 def play(text):
+  """
+        play text
+
+        Exemple:
+        >> play("hello my name is MRPi1")
+  """
   cmd = 'echo "' + text + '" | festival --tts'
   writeCommand("SPE")# enable speaker
   os.system(cmd)
@@ -450,4 +636,5 @@ def __convListToFloat(liste):
     a = a + liste[i]
     i = i + 1
   return(float(a))
-  
+ 
+# end file

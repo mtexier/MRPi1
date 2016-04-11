@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# Date : 21/03/2016
-# Version : 0.1
+# Date : 07/04/2016
+# Version : 0.12
  
 """
     Ce module proclame la bonne parole de sieurs Sam et Max. Puissent-t-ils
@@ -9,7 +9,7 @@
     reminiscent.
 """
  
-__version__ = "0.0.1"
+__version__ = "0.1.2"
  
 from mrpi1 import led
 from mrpi1 import ledToggle
@@ -24,6 +24,8 @@ from mrpi1 import ambiantLight
 from mrpi1 import proxSensor
 
 from mrpi1 import forward
+from mrpi1 import controlEnable
+from mrpi1 import controlDisable
 from mrpi1 import forwardC
 from mrpi1 import back
 from mrpi1 import backC
