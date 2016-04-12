@@ -4,8 +4,8 @@
 #  Python API
 #  This library is used for the MRPi1 robot.
 #  http://www.macerobotics.com
-#  Date : 11/04/2016
-#  Version : 0.13
+#  Date : 12/04/2016
+#  Version : 0.14
 #
 #  MIT Licence
 
@@ -413,7 +413,7 @@ def turnRightC(speed, distance):
   port.write("!")
 
   while True:
-    writeCommand("TGS,1")
+    writeCommand("TGS,2")
     state = readData()
     if((state == '3') or (state == '4')):# state = 3 (end of trapezoid), state = 4 (error trapezoid)
       if (state == '4'):
@@ -465,7 +465,7 @@ def turnLeftC(speed, distance):
   port.write("!")
   
   while True:
-    writeCommand("TGS,1")
+    writeCommand("TGS,2")
     state = readData()
     if((state == '3') or (state == '4')):# state = 3 (end of trapezoid), state = 4 (error trapezoid)
       if (state == '4'):
