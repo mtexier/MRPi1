@@ -4,8 +4,8 @@
 #  Python API
 #  This library is used for the MRPi1 robot.
 #  http://www.macerobotics.com
-#  Date : 12/04/2016
-#  Version : 0.14
+#  Date : 13/04/2016
+#  Version : 0.15
 #
 #  MIT Licence
 
@@ -57,6 +57,8 @@ control_robot = False
 
 # init serial port, baud rate = 115200
 port = serial.Serial('/dev/ttyAMA0', 115200)
+
+
 
 
 # turn led on or off
@@ -272,8 +274,10 @@ def controlEnable():
         >> controlEnable()
   """
   global control_robot
-  control_robot = True
-  writeCommand("CRE")
+  
+  if control_robot == False :
+    control_robot = True
+    writeCommand("CRE")
 
 # control robot disable  
 def controlDisable():
@@ -284,8 +288,10 @@ def controlDisable():
         >> controlDisable()
   """
   global control_robot
-  control_robot = False
-  writeCommand("CRD")
+  
+  if control_robot == True :
+    control_robot = False
+    writeCommand("CRD")
 
 # the robot move forward with control
 def forwardC(speed, distance):
