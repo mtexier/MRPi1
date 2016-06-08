@@ -4,8 +4,8 @@
 #  Python API
 #  This library is used for the MRPi1 robot.
 #  http://www.macerobotics.com
-#  Date : 13/04/2016
-#  Version : 0.15
+#  Date : 11/05/2016
+#  Version : 0.18
 #
 #  MIT Licence
 
@@ -42,6 +42,7 @@ __all__ = ['motorRight']
 __all__ = ['motorLeft']
 __all__ = ['encoderLeft']
 __all__ = ['encoderRight']
+__all__ = ['irReceiver']
 __all__ = ['playWav']
 __all__ = ['playMp3']
 __all__ = ['playTxt']
@@ -52,8 +53,8 @@ __all__ = ['readData']
 ###############################################################
 ###############################################################
 
-# control robot (postion/orientation enable or disable)
-control_robot = False
+
+
 
 # init serial port, baud rate = 115200
 port = serial.Serial('/dev/ttyAMA0', 115200)
@@ -115,7 +116,7 @@ def firmwareVersion():
   port.flushInput() # reset serial receive buffer
   writeCommand("FV")
   value = readData()
-  return __convListToUint(value)
+  return __convListToFloat(value)
   
 #---------------------------------------------------------------------
 #-------------[ MRPI1 switch methods]---------------------------------
@@ -224,7 +225,7 @@ def proxSensor(sensor):
   """
         Read proximity sensor
 
-        parameter : 0 to 3
+        parameter : 0 to 6
 
         return proximity sensor (0 to 4095)
 
@@ -278,6 +279,8 @@ def controlEnable():
   if control_robot == False :
     control_robot = True
     writeCommand("CRE")
+  else:
+    print "error : control is already enable !"
 
 # control robot disable  
 def controlDisable():
@@ -289,7 +292,7 @@ def controlDisable():
   """
   global control_robot
   
-  if control_robot == True :
+  if (control_robot == True) or  (control_robot == False):
     control_robot = False
     writeCommand("CRD")
 
@@ -553,6 +556,24 @@ def encoderRight():
   return __convListToUint(value)
   
 #---------------------------------------------------------------------
+#-------------[ MRPI1 IR receiver ]-----------------------------------
+
+# read IR receiver
+def irReceiver():
+  """
+        Read infrared receiver
+
+        Exemple:
+        >> irReceiver()
+  """
+  liste = []
+  value = 0
+  port.flushInput() # reset serial receive buffer
+  port.write("#RC5!")
+  value = readData()
+  return __convListToUint(value) 
+  
+#---------------------------------------------------------------------
 #-------------[ MRPI1 audio robot methods]----------------------------
 
 # play wav file, exemple : playWav("Hello.wav")
@@ -607,6 +628,22 @@ def play(text):
   writeCommand("SPE")# enable speaker
   os.system(cmd)
   writeCommand("SPD")# disable speaker
+  
+#---------------------------------------------------------------------
+#-------------[ MRPI1 serial2 methods]----------------------------
+  
+# play  text file, exemple : playFileTxt("Hello.txt")
+def serial2Write(data):
+  """
+        serial 2 write 
+
+        Exemple:
+        >> serial2Write("HELLO")
+  """
+  port.write("#SRLW,")
+  port.write(data)
+  port.write("!")
+  
 
 #------------------------------------------------------------
 #-------------[ MRPI1 class utils private methods]------------
@@ -642,5 +679,10 @@ def __convListToFloat(liste):
     a = a + liste[i]
     i = i + 1
   return(float(a))
+  
+  
+# control robot (postion/orientation disable)
+control_robot = False
+controlDisable()
  
 # end file

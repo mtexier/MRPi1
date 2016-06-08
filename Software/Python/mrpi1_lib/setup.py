@@ -3,7 +3,8 @@
  
 from setuptools import setup, find_packages
  
-
+# notez qu'on import la lib
+# donc assurez-vous que l'importe n'a pas d'effet de bord
 import mrpi1_lib
  
 setup(

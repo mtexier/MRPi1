@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# Date : 07/04/2016
-# Version : 0.12
+# Date : 11/05/2016
+# Version : 0.18
  
 """
     Ce module proclame la bonne parole de sieurs Sam et Max. Puissent-t-ils
@@ -41,6 +41,8 @@ from mrpi1 import motorLeft
 from mrpi1 import encoderLeft
 from mrpi1 import encoderRight
 
+from mrpi1 import irReceiver
+
 from mrpi1 import playWav
 from mrpi1 import playMp3
 from mrpi1 import playTxt
@@ -48,5 +50,7 @@ from mrpi1 import play
 
 from mrpi1 import writeCommand
 from mrpi1 import readData
+
+from mrpi1 import serial2Write
 
 
