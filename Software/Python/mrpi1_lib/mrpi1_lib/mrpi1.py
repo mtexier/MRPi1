@@ -4,8 +4,8 @@
 #  Python API
 #  This library is used for the MRPi1 robot.
 #  http://www.macerobotics.com
-#  Date : 11/05/2016
-#  Version : 0.18
+#  Date : 12/06/2016
+#  Version : 0.19
 #
 #  MIT Licence
 
@@ -43,6 +43,9 @@ __all__ = ['motorLeft']
 __all__ = ['encoderLeft']
 __all__ = ['encoderRight']
 __all__ = ['irReceiver']
+__all__ = ['acceleroX']
+__all__ = ['acceleroY']
+__all__ = ['acceleroZ']
 __all__ = ['playWav']
 __all__ = ['playMp3']
 __all__ = ['playTxt']
@@ -572,7 +575,37 @@ def irReceiver():
   port.write("#RC5!")
   value = readData()
   return __convListToUint(value) 
+
+#---------------------------------------------------------------------
+#-------------[ MRPI1 accelerometer ]-----------------------------------
+
+# read accelerometer axe X
+def acceleroX():
+  liste = []
+  value = 0
+  port.flushInput() # reset serial receive buffer
+  writeCommand("ACCX")
+  value = readData()
+  return __convListToFloat(value) 
+
+# read accelerometer axe Y
+def acceleroY():
+  liste = []
+  value = 0
+  port.flushInput() # reset serial receive buffer
+  writeCommand("ACCY")
+  value = readData()
+  return __convListToFloat(value) 
   
+# read accelerometer axe Z
+def acceleroZ():
+  liste = []
+  value = 0
+  port.flushInput() # reset serial receive buffer
+  writeCommand("ACCZ")
+  value = readData()
+  return __convListToFloat(value) 
+
 #---------------------------------------------------------------------
 #-------------[ MRPI1 audio robot methods]----------------------------
 
