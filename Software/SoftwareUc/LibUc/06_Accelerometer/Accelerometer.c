@@ -3,24 +3,18 @@
   * @file    Accelerometer.c
   * @author  Mace Robotics
   * @version V1.0
-  * @date    5/11/2015
+  * @date    12/06/2016
   * @brief
   *
  *******************************************************************************/
 #include "Accelerometer.h"
 
-
-
 /************************************************************************
  * Private functions definitions
 ***********************************************************************/
-static void Accelerometer_writeReg(uint8_t register_address, uint8_t data);
-static uint8_t Accelerometer_readReg(uint8_t register_address);
-static void Accelerometer_standby(void);
-static void Accelerometer_active(void);
 
-static void mma8652Reg8Writre (I2C_HandleTypeDef *i2cHandle, uint8_t reg, uint8_t value);
 
+static float Accelerometer_ReadAxe(int Axe_accelero);
 
 
 /**********************************************************
@@ -30,34 +24,11 @@ static void mma8652Reg8Writre (I2C_HandleTypeDef *i2cHandle, uint8_t reg, uint8_
 **********************************************************/
 void Accelerometer_init(void)
 {
-uint8_t data;
 
   // init i2c digital interface
- MR_I2C_init(I2C1, I2C1_PB6_PB7, I2C_CLOCK_100K);
+  MR_I2C_init(I2C1, I2C1_PB6_PB7, I2C_CLOCK_100K);
 
-
-
-
-
-
-
-  // Put the part in Standby Mode
-  //Accelerometer_standby();
-
- //MR_I2C_Write(ACC_ADDRESS,CTRL_REG1,0x44);
-
-
-
-
-
-
-
-
-
-
-
-
-
+  Accelerometer_writeReg( CTRL_REG1, 0x01);//
 
 }
 
@@ -68,16 +39,9 @@ uint8_t data;
  * @param  None
  * @retval None
 **********************************************************/
-static void Accelerometer_writeReg(uint8_t register_address, uint8_t data)
+void Accelerometer_writeReg(uint8_t register_address, uint8_t data)
 {
-uint8_t r;
-
-  r = MR_I2C_Write( ACC_ADDRESS, register_address, data);
-
-
-
-
-
+  MR_I2C_Write( ACC_ADDRESS, register_address, data);
 }
 
 
@@ -86,46 +50,84 @@ uint8_t r;
  * @param  None
  * @retval None
 **********************************************************/
-static uint8_t Accelerometer_readReg(uint8_t register_address)
+uint8_t Accelerometer_readReg(uint8_t register_address)
 {
-uint8_t data;
+uint8_t data_read;
 
-  MR_I2C_Read(ACC_ADDRESS, register_address, &data);
+  data_read = MR_I2C_Read(ACC_ADDRESS, register_address);
 
-
-
-  return 22;
+  return data_read;
 }
 
 
 /**********************************************************
- * @brief  Put the sensor into Standby Mode 
+ * @brief  Accelerometer read axe X
  * @param  None
  * @retval None
 **********************************************************/
-static void Accelerometer_standby(void)
+float Accelerometer_ReadAxeX(void)
 {
-uint8_t data;
-
- // data = Accelerometer_readReg(CTRL_REG1);
-  //Accelerometer_writeReg( CTRL_REG1, data & ~(0x01));
-  //Accelerometer_writeReg( CTRL_REG1, 0x00);
-
+  return Accelerometer_ReadAxe(OUT_X_MSB);
 }
 
 
 /**********************************************************
- * @brief  Put the sensor into Active Mode 
+ * @brief  Accelerometer read axe Y
  * @param  None
  * @retval None
 **********************************************************/
-static void Accelerometer_active(void)
+float Accelerometer_ReadAxeY(void)
 {
-uint8_t data;
-
- // data = Accelerometer_readReg(CTRL_REG1);
-
- // Accelerometer_writeReg( CTRL_REG1, data | 0x01);
+  return Accelerometer_ReadAxe(OUT_Y_MSB);
 }
- 
+
+
+/**********************************************************
+ * @brief  Accelerometer read axe Z
+ * @param  None
+ * @retval None
+**********************************************************/
+float Accelerometer_ReadAxeZ(void)
+{
+  return Accelerometer_ReadAxe(OUT_Z_MSB);
+}
+
+
+/**********************************************************
+ * @brief  Accelerometer read axe X, Y or Z
+ * @param  None
+ * @retval None
+**********************************************************/
+static float Accelerometer_ReadAxe(int Axe_accelero)
+{
+int8_t MSB, LSB;
+float axe;
+
+  MSB = Accelerometer_readReg(Axe_accelero);
+
+  if(MSB > 128)
+  {
+    MSB = 128 - MSB;
+  }
+
+  LSB = Accelerometer_readReg(Axe_accelero+1) >> 4;
+
+  axe = MSB << 4;
+  axe = axe + LSB;
+
+  if(axe < -2046)
+  {
+    axe = 0;
+  }
+  else
+  {
+    axe = (axe * 2)/2047;
+  }
+
+  return axe;
+}
+
+
+
+
  // End Of file
