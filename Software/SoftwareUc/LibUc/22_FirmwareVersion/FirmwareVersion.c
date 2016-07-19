@@ -3,7 +3,7 @@
   * @file    FirmwareVersion.c
   * @author  Mace Robotics (www.macerobotics.com)
   * @version V1.0
-  * @date    30/12/2015
+  * @date    12/06/2016
   * @brief  
   *
   * 
@@ -11,7 +11,7 @@
 
 #include "FirmwareVersion.h"
 
-const float firmware_version = 0.6;
+const float firmware_version = 0.8;
 
 /**********************************************************
  * @brief  FirmwareVersion_init

@@ -73,6 +73,13 @@
   * @brief Accelerometer
   */
 void Accelerometer_init(void);
+
+float Accelerometer_ReadAxeX(void);
+float Accelerometer_ReadAxeY(void);
+float Accelerometer_ReadAxeZ(void);
+
+uint8_t Accelerometer_readReg(uint8_t register_address);
+void Accelerometer_writeReg(uint8_t register_address, uint8_t data);
  
  #endif
 // End Of File

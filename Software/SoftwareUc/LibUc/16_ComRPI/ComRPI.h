@@ -56,6 +56,10 @@ COM_CRD,           //  Control robot disable
 COM_RC5,           //  Control robot disable
 COM_SRLW,          //  Serial 2 write
 COM_SRLR,          //  Serial 2 read
+COM_RST,           //  Reset
+COM_ACCX,          //  Accelerometer axe X
+COM_ACCY,          //  Accelerometer axe Y
+COM_ACCZ,          //  Accelerometer axe Z
 COM_NONE           // No Command
 }enum_NameComdRPi;
 

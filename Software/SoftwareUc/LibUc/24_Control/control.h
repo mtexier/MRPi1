@@ -24,6 +24,7 @@ CONTROL_DISABLE
 //#define GAIN_COM (float)(100)
 
 #define GAIN_P_DISTANCE (float)(110)
+#define GAIN_I_DISTANCE (float)(0)
 #define GAIN_P_ORIENTATION (float)(250)
 #define GAIN_COM (float)(100)
 

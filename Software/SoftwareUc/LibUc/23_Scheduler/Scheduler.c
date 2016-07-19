@@ -124,6 +124,8 @@ void task1_scheduler(void)
  positionControl();
 
 
+
+
 }
 
 
@@ -153,12 +155,6 @@ if(c_task2  == 6)
 **********************************************************/
 void task3_scheduler(void)
 {
-static uint8_t asv_speed = 0;
-
-float encoderLeft, encoderRight, error_speed_right, error_speed_left, command_motor_right, command_motor_left;
-float speedCommand;
-static float encoderLeft_old, encoderRight_old;
-float encoderLeft_new, encoderRight_new;
 
   if(controlState() == true)
   {

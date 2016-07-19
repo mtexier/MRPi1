@@ -28,7 +28,7 @@ void controlManage(int32_t distanceCommand, int32_t orientationCommand )
 {
 float DistanceRobot, OrientationRobot;
 float DistanceSpeed, OrientationSpeed;
-float error_distance, error_orientation;
+float error_distance, error_orientation, sum_error_distance = 0;
 float command, command_distance, command_orientaton;
 int32_t wheelRightCommand, wheelLeftCommand;
 
@@ -44,7 +44,10 @@ int32_t wheelRightCommand, wheelLeftCommand;
   // distance error calcul
   error_distance = distanceCommand - DistanceRobot;
 
-  command = error_distance*GAIN_P_DISTANCE/(GAIN_COM);
+  // sum
+  sum_error_distance += error_distance;
+
+  command = error_distance*GAIN_P_DISTANCE/(GAIN_COM) + sum_error_distance*GAIN_I_DISTANCE/(GAIN_COM);
 
   command_distance = command - (GAIN_P_DISTANCE)*DistanceSpeed/(GAIN_COM);
 

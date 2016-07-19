@@ -65,7 +65,11 @@ const char List_Command[NUMBER_COMMAND][SIZE_COMMAND]=
 "CRD",
 "RC5",
 "SRLW",
-"SRLR"
+"SRLR",
+"RST",
+"ACCX",
+"ACCY",
+"ACCZ"
 };
 
 
@@ -260,7 +264,6 @@ uint32_t parameter1 = 0;
 uint32_t parameter2 = 0;
 bool Test_check_P1 = false;
 bool Test_check_P2 = false;
-bool result = false;
 enum_stateTrapezoid stateTrapezoid;
 char string_uart3[10];
 
@@ -505,31 +508,28 @@ char string_uart3[10];
     // move robot with control
     case COM_MFC :
 
-    	result = trapezoidGenerator_create(TRAPEZOID_DISTANCE_FORWARD, parameter1, parameter2);
+    	trapezoidGenerator_create(TRAPEZOID_DISTANCE_FORWARD, parameter1, parameter2);
 
     break;
 
     // move robot back with control
     case COM_MBC :
 
-    	result = trapezoidGenerator_create(TRAPEZOID_DISTANCE_BACK, parameter1, parameter2);
+    	trapezoidGenerator_create(TRAPEZOID_DISTANCE_BACK, parameter1, parameter2);
 
     break;
 
     // move robot with control
     case COM_TRC :
 
-    	result = trapezoidGenerator_create(TRAPEZOID_ORIENTATION_RIGHT, parameter1, parameter2);
-
-
+    	trapezoidGenerator_create(TRAPEZOID_ORIENTATION_RIGHT, parameter1, parameter2);
 
     break;
 
     //turn left with control
     case COM_TLC :
 
-    	result = trapezoidGenerator_create(TRAPEZOID_ORIENTATION_LEFT, parameter1, parameter2);
-
+    	trapezoidGenerator_create(TRAPEZOID_ORIENTATION_LEFT, parameter1, parameter2);
 
     break;
 
@@ -595,6 +595,32 @@ char string_uart3[10];
     	Usart_Send_Character(UART4, '\n');
     	Usart_Send_String(UART4, string_uart3);
     	Usart_Send_Character(UART4, '\n');
+    break;
+
+    // Reset
+    case COM_RST :
+    	NVIC_SystemReset();
+    break;
+
+    // Accelerometer axe X
+    case COM_ACCX :
+        Usart_Send_Character(UART4, '$');
+        Usart_Send_float(UART4, Accelerometer_ReadAxeX() );// Read accelerometer axe X
+        Usart_Send_Character(UART4, '\n'); // end
+    break;
+
+    // Accelerometer axe Y
+    case COM_ACCY :
+        Usart_Send_Character(UART4, '$');
+        Usart_Send_float(UART4, Accelerometer_ReadAxeY() );// Read accelerometer axe Y
+        Usart_Send_Character(UART4, '\n'); // end
+    break;
+
+    // Accelerometer axe Z
+    case COM_ACCZ :
+        Usart_Send_Character(UART4, '$');
+        Usart_Send_float(UART4, Accelerometer_ReadAxeZ() );// Read accelerometer axe Z
+        Usart_Send_Character(UART4, '\n'); // end
     break;
 
 

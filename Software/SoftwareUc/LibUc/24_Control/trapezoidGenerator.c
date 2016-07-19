@@ -251,7 +251,7 @@ float area1, area2, area3;
 
 
   // check if consigne > area1
-  if(trapezoidGenerator_check(&trapezoid, area1) == true)
+  if(trapezoidGenerator_check(trapezoid, area1) == true)
   {
 
     // time3 calcul

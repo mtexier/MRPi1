@@ -21,9 +21,9 @@
 #define GROUND_SENSOR_RIGHT 10 // Adc PA1
 
 typedef enum{
-GR_RIGHT = 0,
-GR_LEFT,
-GR_MIDDLE,
+GR_RIGHT = 1,
+GR_LEFT = 2,
+GR_MIDDLE = 3,
 }enum_GroundSensors;
 
 

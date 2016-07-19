@@ -57,6 +57,7 @@ static uint8_t state=0;
 
 
 
+
 	  state++;
 
 	   // check the battery (every second)

@@ -55,7 +55,6 @@ uint8_t Usart_Read_Character(USART_TypeDef* Usart);
 
 void Usart3_Read_String(char * String);
 
-//void USART3_IRQHandler(void);
 
 void Usart_Send_uint(USART_TypeDef* Usart, uint32_t Number);
 void Usart_Send_int(USART_TypeDef* Usart, int32_t Number);

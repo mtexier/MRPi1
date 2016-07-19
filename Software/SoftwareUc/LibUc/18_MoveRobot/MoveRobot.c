@@ -38,7 +38,7 @@ void MoveRobot_stop(void)
 **********************************************************/
 void MoveRobot_forward(uint32_t Speed)
 {
-  Motor_right(MOTOR_FORWARD, Speed-3); // -3 motor no perfect
+  Motor_right(MOTOR_FORWARD, Speed); // -3 motor no perfect
   Motor_left(MOTOR_FORWARD, Speed);
 }
 

@@ -7,6 +7,7 @@
   * @brief
   *
  *******************************************************************************/
+#include <string.h>
 
 #include "IRremote.h"
 #include "Leds.h"

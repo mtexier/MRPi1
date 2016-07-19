@@ -8,6 +8,8 @@
   *
  *******************************************************************************/
 #include <stdio.h>
+#include <string.h>
+
 #include "stm32f4xx.h"
 #include "Usart.h"
 #include "Leds.h"
@@ -302,7 +304,6 @@ void Usart_Send_Buffer(USART_TypeDef* Usart, char *buffer, uint16_t SizeBuffer)
 **********************************************************/
 void Usart_Send_String(USART_TypeDef* Usart, char *String)
 {
-
 
   while(*String)
   {
