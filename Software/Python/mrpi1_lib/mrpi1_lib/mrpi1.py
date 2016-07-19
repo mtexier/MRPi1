@@ -4,8 +4,8 @@
 #  Python API
 #  This library is used for the MRPi1 robot.
 #  http://www.macerobotics.com
-#  Date : 12/06/2016
-#  Version : 0.19
+#  Date : 19/07/2016
+#  Version : 0.2
 #
 #  MIT Licence
 
@@ -327,6 +327,10 @@ def forwardC(speed, distance):
   else:
     print "error : control robot disable"
 
+# the robot move forward with control (distance : millimeter)
+def forward_mm(speed, distance):
+  forwardC(speed, distance*4)
+
 # the robot move back
 def back(speed):
   """
@@ -370,6 +374,10 @@ def backC(speed, distance):
         print "error : speed to hight"
       chaine = 0
       break # end while 1 
+	  
+# the robot move back with control (distance : millimeter)
+def back_mm(speed, distance):
+  backC(speed, distance*4)
 
 # the robot stop
 def stop():
@@ -432,6 +440,10 @@ def turnRightC(speed, distance):
         print "error : speed to hight"
       chaine = 0
       break # end while 1 
+	  
+# the robot turn right with control 
+def turnRight_degree(speed, degree):
+  turnRightC(speed, degree*546/90)
 
 # the robot turn left
 def turnLeft(speed):
@@ -484,6 +496,10 @@ def turnLeftC(speed, distance):
         print "error : speed to hight"
       chaine = 0
       break # end while 1 
+	  
+# the robot turn right with control 
+def turnLeft_degree(speed, degree):
+  turnLeftC(speed, degree*546/90)
   
 # the motor right
 def motorRight(direction, speed):

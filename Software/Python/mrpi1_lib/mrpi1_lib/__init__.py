@@ -1,12 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# Date : 12/06/2016
-# Version : 0.19
+# Date : 19/07/2016
+# Version : 0.20
  
 """
-    Ce module proclame la bonne parole de sieurs Sam et Max. Puissent-t-ils
-    retrouver une totale liberté de pensée cosmique vers un nouvel age
-    reminiscent.
 """
  
 __version__ = "0.1.2"
@@ -34,6 +31,10 @@ from mrpi1 import turnLeft
 from mrpi1 import turnLeftC
 from mrpi1 import turnRight
 from mrpi1 import turnRightC
+from mrpi1 import forward_mm
+from mrpi1 import back_mm
+from mrpi1 import turnRight_degree
+from mrpi1 import turnLeft_degree
 
 from mrpi1 import motorRight
 from mrpi1 import motorLeft
