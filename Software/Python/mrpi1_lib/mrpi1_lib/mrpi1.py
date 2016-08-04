@@ -4,12 +4,13 @@
 #  Python API
 #  This library is used for the MRPi1 robot.
 #  http://www.macerobotics.com
-#  Date : 19/07/2016
-#  Version : 0.2
+#  Date : 04/08/2016
+#  Version : 0.22
 #
 #  MIT Licence
 
 ######################################################
+from math import*
 
 import serial
 import time
@@ -54,6 +55,7 @@ __all__ = ['playWav']
 __all__ = ['playMp3']
 __all__ = ['playTxt']
 __all__ = ['play']
+__all__ = ['robotGo']
 __all__ = ['writeCommand']
 __all__ = ['readData']
 
@@ -311,7 +313,15 @@ def forwardC(speed, distance):
         Exemple:
         >> forwardC(20, 4000)
   """
+  
+  if check_speed(speed,distance) == 0:
+    return 0
+	
   if control_robot == True:
+  
+    print "Forward with control enable"
+	
+    distance = int(distance)
     speed = str(speed)
     distance = str(distance)
     port.write("#MFC,")
@@ -319,15 +329,21 @@ def forwardC(speed, distance):
     port.write(",")
     port.write(speed)
     port.write("!")
-    
+	
+    port.flushInput() # reset serial receive buffer
+	
     while True:
+      time.sleep(0.1)
+      state = 0
       writeCommand("TGS,1")
+      port.flushInput() # reset serial receive buffer
       state = readData()
       if((state == '3') or (state == '4')):# state = 3 (end of trapezoid), state = 4 (error trapezoid)
         if (state == '4'):
           print "error : speed to hight"
+          return 0
         chaine = 0
-        break # end while 1
+        return 1# end while 1
   else:
     print "error : control robot disable"
 
@@ -361,6 +377,10 @@ def backC(speed, distance):
         Exemple:
         >> backC(20, 4000)
   """
+  if check_speed(speed,distance) == 0:
+    return 0
+	
+  distance = int(distance)
   speed = str(speed)
   distance = str(distance)
   port.write("#MBC,")
@@ -370,7 +390,10 @@ def backC(speed, distance):
   port.write("!")
   print "move back with control"
   
+  port.flushInput() # reset serial receive buffer
+  
   while True:
+    time.sleep(0.1)
     writeCommand("TGS,1")
     state = readData()
     if((state == '3') or (state == '4')):# state = 3 (end of trapezoid), state = 4 (error trapezoid)
@@ -428,6 +451,10 @@ def turnRightC(speed, distance):
         Exemple:
         >> turnRightC(10, 546)
   """
+  if check_speed(speed,distance) == 0:
+    return 0
+	
+  distance = int(distance)
   speed = str(speed)
   distance = str(distance)
   port.write("#TRC,")
@@ -435,8 +462,11 @@ def turnRightC(speed, distance):
   port.write(",")
   port.write(speed)
   port.write("!")
+  
+  port.flushInput() # reset serial receive buffer
 
   while True:
+    time.sleep(0.1)
     writeCommand("TGS,2")
     state = readData()
     if((state == '3') or (state == '4')):# state = 3 (end of trapezoid), state = 4 (error trapezoid)
@@ -444,6 +474,7 @@ def turnRightC(speed, distance):
         print "error : speed to hight"
       chaine = 0
       break # end while 1 
+  print("Turn right ok!")
 	  
 # the robot turn right with control 
 def turnRight_degree(speed, degree):
@@ -484,6 +515,10 @@ def turnLeftC(speed, distance):
         Exemple:
         >> turnLeftC(10, 546)
   """
+  if check_speed(speed,distance) == 0:
+    return 0
+	
+  distance = int(distance)
   speed = str(speed)
   distance = str(distance)
   port.write("#TLC,")
@@ -492,7 +527,10 @@ def turnLeftC(speed, distance):
   port.write(speed)
   port.write("!")
   
+  port.flushInput() # reset serial receive buffer
+  
   while True:
+    time.sleep(0.1)
     writeCommand("TGS,2")
     state = readData()
     if((state == '3') or (state == '4')):# state = 3 (end of trapezoid), state = 4 (error trapezoid)
@@ -544,6 +582,82 @@ def motorLeft(direction, speed):
   port.write(",")
   port.write(pwm)
   port.write("!")
+  
+  
+########################################
+# robot go (X and Y Coordinate),
+# speed : speed of the robot (0 to 100)
+# cordX : Coordinate axe X (millimeter)
+# cordY : Coordinate axe Y (millimeter)
+def robotGo(speed, cordX, cordY):
+
+  # 
+  if(speed <= 0):
+    print("error speed value")
+    return 0
+
+  hypotenuse = cordX*cordX + cordY*cordY
+  hypotenuse = sqrt(hypotenuse)
+  angle = cordX/hypotenuse
+  angle = acos(angle)
+  angle = (angle*360)/(2*pi)
+  
+  if(cordY < 0):
+    angle = -angle
+	
+  # angle negatif
+  if(angle < 0):
+    angle = angle + 360
+  
+  
+  print(hypotenuse)
+  print(angle)
+  
+  if check_speed(speed,hypotenuse*4) == 0:
+    return 0
+	
+  if check_speed(speed,angle*546/90) == 0:
+    return 0
+	
+  turnRight_degree(speed, angle)
+  time.sleep(0.1)
+  forward_mm(speed, hypotenuse)
+  
+# read robot position axe X
+def robotPositionX():
+  """
+        Read robot position axe X
+
+        return position (units : mm)
+
+        Exemple:
+        >> robotPositionX()
+  """
+  liste = []
+  value = 0
+  port.flushInput() # reset serial receive buffer
+  writeCommand("POX")
+  value = readData()
+  return __convListToFloat(value/4) 
+  
+  
+# read robot position axe Y
+def robotPositionY():
+  """
+        Read robot position axe Y
+
+        return position (units : mm)
+
+        Exemple:
+        >> robotPositionY()
+  """
+  liste = []
+  value = 0
+  port.flushInput() # reset serial receive buffer
+  writeCommand("POY")
+  value = readData()
+  return __convListToFloat(value/4) 
+  
 
 #---------------------------------------------------------------------
 #-------------[ MRPI1 encoders robot methods]-------------------------
@@ -700,7 +814,23 @@ def serial2Write(data):
 
 #------------------------------------------------------------
 #-------------[ MRPI1 class utils private methods]------------
- 
+
+# check 
+def check_speed(speed, distance):
+  acceleration = 0.5 # acceleration in the STM32 (trapezoid generator)
+  check1 = distance*acceleration
+  check2 = speed*speed
+  
+  if(distance == 0):
+    return 1
+  
+  if check1 > check2:
+      return 1
+  else:
+    print("Error speed to hight !")
+    return 0
+  
+
 # convert list to unsigned int
 def __convListToUint(liste):
   a=''

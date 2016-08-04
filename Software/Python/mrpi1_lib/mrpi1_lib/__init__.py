@@ -1,12 +1,12 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# Date : 19/07/2016
-# Version : 0.20
+# Date : 04/08/2016
+# Version : 0.22
  
 """
 """
  
-__version__ = "0.1.2"
+__version__ = "0.2.1"
  
 from mrpi1 import led
 from mrpi1 import ledToggle
@@ -36,6 +36,11 @@ from mrpi1 import back_mm
 from mrpi1 import turnRight_degree
 from mrpi1 import turnLeft_degree
 
+from mrpi1 import robotGo
+
+from mrpi1 import robotPositionX
+from mrpi1 import robotPositionY
+
 from mrpi1 import motorRight
 from mrpi1 import motorLeft
 
@@ -57,5 +62,6 @@ from mrpi1 import writeCommand
 from mrpi1 import readData
 
 from mrpi1 import serial2Write
+
 
 
