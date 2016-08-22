@@ -2,7 +2,7 @@
   ******************************************************************************
   * @file    MRPi1.h
   * @author  Mace Robotic
-  * @version V1.0
+  * @version V1.1
   * @date    22/08/2016
   * @brief	
   *
@@ -41,6 +41,13 @@ void stop(void);
 void turnRight(unsigned int speed); 
 void turnLeft(unsigned int speed);
 void forwardC(unsigned int speed, unsigned int distance); 
+void forward_mm(unsigned int speed, unsigned int distance_mm);
+void backC(unsigned int speed, unsigned int distance);
+void back_mm(unsigned int speed, unsigned int distance_mm);
+void turnRightC(unsigned int speed, unsigned int angle);
+void turnLeftC(unsigned int speed, unsigned int angle);  
+void turnRight_degree(unsigned int speed, unsigned int angle);
+void turnLeft_degree(unsigned int speed, unsigned int angle);  
 
 // control
 void controlEnable(void);

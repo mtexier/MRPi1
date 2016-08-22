@@ -2,7 +2,7 @@
   ******************************************************************************
   * @file    MRPi1.c
   * @author  Mace Robotics
-  * @version V1.0
+  * @version V1.1
   * @date    22/08/2016
   * @brief
   *
@@ -42,6 +42,9 @@ struct termios serial;
   
   // Apply configuration
   tcsetattr(uart_file, TCSANOW, &serial); 
+  
+  // control disable
+  controlDisable();
 
 }
 
@@ -466,9 +469,131 @@ int value=0;
       value = 3;
     }
   }
-  
+ 
+}
 
+
+/**********************************************************
+ * @brief  forward with control 
+ * @param  speed (0 to 100), distance (mm)
+ * @retval value
+**********************************************************/
+void forward_mm(unsigned int speed, unsigned int distance_mm)
+{
+  forwardC(speed,distance_mm*4);
+}
+
+
+/**********************************************************
+ * @brief  back with control 
+ * @param  speed (0 to 100), distance (mm)
+ * @retval value
+**********************************************************/
+void back_mm(unsigned int speed, unsigned int distance_mm)
+{
+  backC(speed,distance_mm*4);
+}
+
+
+/**********************************************************
+ * @brief  turnRight_degree 
+ * @param  angle (degree)
+ * @retval value
+**********************************************************/
+void turnRight_degree(unsigned int speed, unsigned int angle)
+{
+  turnRightC(speed,angle*546/90);
+}
+
+
+/**********************************************************
+ * @brief  turnRight_degree 
+ * @param  angle (degree)
+ * @retval value
+**********************************************************/
+void turnLeft_degree(unsigned int speed, unsigned int angle)
+{
+  turnLeftC(speed,angle*546/90);
+}
+
+
+/**********************************************************
+ * @brief  back with control
+ * @param  none
+ * @retval value
+**********************************************************/
+void backC(unsigned int speed, unsigned int distance)
+{
+int value=0;
+
+  writeCommand2parm("MBC",distance,speed);
   
+  while(value != 3)
+  {
+    usleep(10);
+    writeCommand("TGS,1");    
+    value = readInt();
+    
+    if(value == 4)
+    {
+      printf("error : speed to hight\n");
+      value = 3;
+    }
+  }
+ 
+}
+
+/**********************************************************
+ * @brief  turnRightC
+ * @param  none
+ * @retval value
+**********************************************************/
+void turnRightC(unsigned int speed, unsigned int distance)
+{
+int value=0;
+
+  writeCommand2parm("TRC",distance,speed);
+  
+  while(value != 3)
+  {
+    usleep(10);
+    writeCommand("TGS,2");    
+    value = readInt();
+    
+    if(value == 4)
+    {
+      printf("error : speed to hight\n");
+      value = 3;
+    }
+  }
+ 
+}
+
+
+/**********************************************************
+ * @brief  turnRightC
+ * @param  none
+ * @retval value
+**********************************************************/
+void turnLeftC(unsigned int speed, unsigned int distance)
+{
+int value=0;
+
+  writeCommand2parm("TLC",distance,speed);
+  
+  while(value != 3)
+  {
+    usleep(10);
+    writeCommand("TGS,2");    
+    value = readInt();
+    
+    if(value == 4)
+    {
+      printf("error : speed to hight\n");
+      value = 3;
+    }
+  }
+ 
 }
 
 
