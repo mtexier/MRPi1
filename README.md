@@ -2,6 +2,7 @@
 
 This repository contains support files for MRPi1 robot.
 
+
   - /Hardware
     - / Electonics: Schematics of the MRPi1 board
     - / Mecanics: BOM, etc.
@@ -19,3 +20,5 @@ This repository contains support files for MRPi1 robot.
     - SoftwareUc : Micro-Controler Source files
     - WebPage : Control your robot from a web browser
    
+See the MaceRobotics for the related tutorials:
+http://fr.macerobotics.com/developpeur/tutoriels/tutoriels-mrpi1/
