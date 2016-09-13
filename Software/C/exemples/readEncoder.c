@@ -1,9 +1,12 @@
 #include "MRPi1.h"
 
+/**
+ * Read and print the left and right encoders status.
+ */
+
 int main(int argc, char* argv[])
 {
-int odo_left, odo_right;
-
+  int odo_left, odo_right;
 
   // init robot
   init();  
@@ -18,6 +21,5 @@ int odo_left, odo_right;
 
     sleep(1);
   }
-
-  
 }
+

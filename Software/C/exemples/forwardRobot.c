@@ -1,5 +1,9 @@
 #include "MRPi1.h"
 
+/**
+ * Move the robot forward then turn right.
+ */
+
 int main(int argc, char* argv[])
 {
 

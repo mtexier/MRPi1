@@ -1,8 +1,12 @@
 #include "MRPi1.h"
 
+/**
+ * Read and print the proximity sensors status.
+ */
+
 int main(int argc, char* argv[])
 {
-unsigned int prox1, prox2, prox3, prox4, prox5, prox6;
+  unsigned int prox1, prox2, prox3, prox4, prox5, prox6;
 
   // init robot
   init();  
@@ -17,10 +21,10 @@ unsigned int prox1, prox2, prox3, prox4, prox5, prox6;
     prox5 = proxSensor(5);
     prox6 = proxSensor(6);
 
-    printf("proximity sensor = %d %d %d %d %d %d\n", prox1, prox2, prox3, prox4, prox5, prox6);
+    printf("proximity sensor = %d %d %d %d %d %d\n",
+        prox1, prox2, prox3, prox4, prox5, prox6);
 
     sleep(1);
   }
-
-  
 }
+
